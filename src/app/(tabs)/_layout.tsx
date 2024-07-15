@@ -35,10 +35,11 @@ export default function TabLayout() {
         options={{
           title: 'Menu',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="cutlery" color={color} />,
+          tabBarIcon: ({ color }) => 
+          <TabBarIcon name="cutlery" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
-              <Pressable>
+              <Pressable> 
                 {({ pressed }) => (
                   <FontAwesome
                     name="info-circle"

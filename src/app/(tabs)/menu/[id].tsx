@@ -10,7 +10,7 @@ const sizes=['S', 'M', 'L', 'XL'];
 const ProductDetailScreen = () => {
     const {id} = useLocalSearchParams();
 
-    const [selectedSize, setSelectedSize] = React.useState('M');
+    const [selectedSize, setSelectedSize] = React.useState('');
 
     const product = products.find((product) => product.id.toString() === id);
 
