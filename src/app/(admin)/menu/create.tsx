@@ -1,10 +1,11 @@
 import Button from '../../../components/Button'
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { defaultPizzaImage } from '@/src/components/ProductListItem'
 import Colors from '@/src/constants/Colors'
 import * as ImagePicker from 'expo-image-picker';
-import { Stack } from 'expo-router'
+import { Stack, useLocalSearchParams } from 'expo-router'
+
 
 
 const createProductScreen = () => {
@@ -13,12 +14,44 @@ const createProductScreen = () => {
   const [errors, setErrors] = React.useState('')
   const [image, setImage] = useState<string|null>(null);
 
+  const { id } = useLocalSearchParams();
+  const isUpdate = !!id;
+
+  const onSubmit = () => {
+    isUpdate ? onUpdate() : onCreate()
+  }
+
+  const onUpdate = () => {
+    if (!validateInput()) {
+      return;
+    }
+    console.log('Update Product')
+    resetFields()
+  }
+
   const onCreate = () => {
     if (!validateInput()) {
       return;
     }
     console.log('Create Product')
     resetFields()
+  }
+
+  const onDelete = () => {
+    console.warn('Delete Product')
+  }
+
+  const confirmDelete = () => {
+    Alert.alert('Confirm', 'Are you sure you want to delete this product?', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: onDelete,
+      },
+    ])
   }
 
   const resetFields = () => {
@@ -62,7 +95,7 @@ const createProductScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{title: 'Create Product'}}/>
+      <Stack.Screen options={{title: isUpdate? 'Update Product' : 'Create Product'}}/>
       <Image source={{ uri: image || defaultPizzaImage}} style={styles.image} />
       <Text style={styles.textButton} onPress={pickImage}>Select Image</Text>
 
@@ -84,7 +117,10 @@ const createProductScreen = () => {
       />
 
       <Text style={{color: 'red'}}>{errors}</Text> 
-      <Button text="Create Product" onPress={onCreate}/>
+      <Button text= {isUpdate? 'Update Product' : 'Create Product'} onPress={onSubmit}/>
+      {isUpdate && (
+        <Text onPress={confirmDelete} style={styles.textButton}>Delete Product</Text>
+      )}
     </View>
   )
 }
